@@ -1,3 +1,29 @@
-[gd_scene format=3 uid="uid://jlorl27yybth"]
+[gd_scene load_steps=4 format=3 uid="uid://jlorl27yybth"]
+
+[ext_resource type="Texture2D" uid="uid://cvladf7hbfln5" path="res://assets/sprite/time.png" id="1_oo0fn"]
+[ext_resource type="FontFile" uid="uid://ci60rcx6mhsa3" path="res://fonts/bulletin.regular.ttf" id="2_5ysmq"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_6fi6k"]
+font = ExtResource("2_5ysmq")
+font_size = 25
 
 [node name="HUD" type="CanvasLayer"]
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(99, 92)
+scale = Vector2(5, 5)
+texture = ExtResource("1_oo0fn")
+
+[node name="time" type="Label" parent="."]
+texture_filter = 1
+offset_left = 49.0
+offset_top = 59.0
+offset_right = 156.0
+offset_bottom = 116.0
+text = "00:00"
+label_settings = SubResource("LabelSettings_6fi6k")
+horizontal_alignment = 1
+vertical_alignment = 1

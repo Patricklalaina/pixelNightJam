@@ -1,4 +1,21 @@
-[gd_scene format=3 uid="uid://b70up0rrd0da7"]
+[gd_scene load_steps=8 format=3 uid="uid://b70up0rrd0da7"]
+
+[ext_resource type="FontFile" uid="uid://c14812ee1qjnt" path="res://fonts/born2bsporty-fs.regular.otf" id="1_sjyvh"]
+[ext_resource type="Script" uid="uid://7mqxyobkqo58" path="res://scripts/setting.gd" id="1_u58eq"]
+[ext_resource type="AudioStream" uid="uid://ccqhfwx4ev4i7" path="res://assets/sprite/bg.wav" id="3_7k1fe"]
+[ext_resource type="AudioStream" uid="uid://d0kg5gnn2tpud" path="res://assets/sprite/click.wav" id="4_scrng"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_u58eq"]
+font = ExtResource("1_sjyvh")
+font_size = 80
+
+[sub_resource type="Theme" id="Theme_sjyvh"]
+default_font = ExtResource("1_sjyvh")
+default_font_size = 28
+
+[sub_resource type="LabelSettings" id="LabelSettings_7k1fe"]
+font = ExtResource("1_sjyvh")
+font_size = 28
 
 [node name="settings" type="Control"]
 layout_mode = 3
@@ -7,6 +24,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_u58eq")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1
@@ -16,3 +34,170 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.360784, 0.211765, 0.0980392, 0.705882)
+
+[node name="Label" type="Label" parent="."]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -110.0
+offset_top = 71.0
+offset_right = 110.0
+offset_bottom = 161.0
+grow_horizontal = 2
+text = "VOLUME"
+label_settings = SubResource("LabelSettings_u58eq")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSplitContainer" type="Control" parent="."]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -302.5
+offset_top = -15.5
+offset_right = 302.5
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_sjyvh")
+
+[node name="Label" type="Label" parent="HSplitContainer"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -11.5
+offset_right = 54.0
+offset_bottom = 11.5
+grow_vertical = 2
+size_flags_horizontal = 0
+text = "Music: "
+label_settings = SubResource("LabelSettings_7k1fe")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="minus" type="Button" parent="HSplitContainer"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -158.0
+offset_top = -23.0
+offset_right = -108.0
+offset_bottom = 27.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 0
+text = "-"
+
+[node name="music" type="ProgressBar" parent="HSplitContainer"]
+layout_mode = 0
+offset_left = 206.5
+offset_top = 0.5
+offset_right = 606.5
+offset_bottom = 37.5
+
+[node name="plus" type="Button" parent="HSplitContainer"]
+texture_filter = 1
+layout_mode = 2
+offset_left = 614.5
+offset_top = -7.5
+offset_right = 664.5
+offset_bottom = 42.5
+text = "+"
+
+[node name="HSplitContainer2" type="Control" parent="."]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -302.5
+offset_top = 64.5
+offset_right = 302.5
+offset_bottom = 95.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_sjyvh")
+
+[node name="Label" type="Label" parent="HSplitContainer2"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -11.5
+offset_right = 54.0
+offset_bottom = 11.5
+grow_vertical = 2
+size_flags_horizontal = 0
+text = "Sound: "
+label_settings = SubResource("LabelSettings_7k1fe")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="minus" type="Button" parent="HSplitContainer2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -158.0
+offset_top = -23.0
+offset_right = -108.0
+offset_bottom = 27.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 0
+text = "-"
+
+[node name="audio" type="ProgressBar" parent="HSplitContainer2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -97.0
+offset_top = -18.0
+offset_right = 303.0
+offset_bottom = 19.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 1.16417)
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="plus" type="Button" parent="HSplitContainer2"]
+texture_filter = 1
+layout_mode = 2
+offset_left = 614.5
+offset_top = -7.5
+offset_right = 664.5
+offset_bottom = 42.5
+text = "+"
+
+[node name="bg" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_7k1fe")
+autoplay = true
+bus = &"BG_music"
+
+[node name="btn" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_scrng")
+volume_db = 6.0
+
+[connection signal="pressed" from="HSplitContainer/minus" to="." method="_on_minus_pressed"]
+[connection signal="pressed" from="HSplitContainer/plus" to="." method="_on_plus_pressed"]
+[connection signal="pressed" from="HSplitContainer2/minus" to="." method="_on_minus_pressed2"]
+[connection signal="pressed" from="HSplitContainer2/plus" to="." method="_on_plus_pressed2"]
+[connection signal="finished" from="bg" to="." method="_on_bg_finished"]

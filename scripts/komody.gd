@@ -6,9 +6,9 @@ var buttonPressed: bool = false
 func _ready() -> void:
 	$"../TextureButton/AnimatedSprite2D".play("default")
 	$"../TextureButton".visible = false
-	$"../bed".play("normal")
+	$"../km".play("normal")
 	$"../Node/ProgressBar".visible = false
-	GameManager.tmpOBJ = $"../bed"
+	GameManager.tmpOBJ = $"../km"
 	timerNode = $"../Node"
 	
 	# Connecter le signal de timeout du timer une seule fois
@@ -36,7 +36,7 @@ func _on_texture_button_pressed() -> void:
 	GameManager.start_hiding_sequence()
 	
 	$"../TextureButton".visible = false
-	$"../bed".play("hide_pl")
+	$"../km".play("hide_pl")
 	print("Start timer")
 	timerNode.start_timer()
 	$"../Node/ProgressBar".visible = true

@@ -6,7 +6,8 @@ extends Node
 @onready var show: bool = true
 @onready var isMaximizing: bool = false
 @onready var timerActive: bool = false  # Nouveau flag pour contrôler le timer
-
+@onready var volume_music: float = -6
+@onready var volume_audio: float = 0.0
 @onready var tmpOBJ = null
 
 func reset_player_state():
