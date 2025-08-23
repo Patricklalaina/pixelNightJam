@@ -1,0 +1,138 @@
+[gd_scene load_steps=17 format=3 uid="uid://b5pg1qfiqfhoc"]
+
+[ext_resource type="Script" uid="uid://dpwkputp58c7q" path="res://scripts/fandriana.gd" id="1_7jcp6"]
+[ext_resource type="Texture2D" uid="uid://dvra1bw773kwt" path="res://assets/sprite/fandriana.png" id="2_1bcxx"]
+[ext_resource type="Texture2D" uid="uid://op6bf5556oqh" path="res://assets/sprite/frame.png" id="3_1bcxx"]
+[ext_resource type="Texture2D" uid="uid://gkp51yv8yakm" path="res://assets/sprite/lit_hide.png" id="3_k3tre"]
+[ext_resource type="PackedScene" uid="uid://dsklocml6nqsh" path="res://scenes/node.tscn" id="5_jir0i"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_iywne"]
+size = Vector2(68, 106)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_iywne"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jir0i"]
+animations = [{
+"frames": [{
+"duration": 2.5,
+"texture": ExtResource("2_1bcxx")
+}, {
+"duration": 1.5,
+"texture": ExtResource("3_k3tre")
+}],
+"loop": true,
+"name": &"hide_pl",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_1bcxx")
+}],
+"loop": true,
+"name": &"normal",
+"speed": 5.0
+}]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1bcxx"]
+bg_color = Color(0.6, 0.6, 0.6, 0.0117647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k3tre"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.800925, 0.522306, 0.477719, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jir0i"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i5cru"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k3tre"]
+atlas = ExtResource("3_1bcxx")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jir0i"]
+atlas = ExtResource("3_1bcxx")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i5cru"]
+atlas = ExtResource("3_1bcxx")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ioada"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k3tre")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jir0i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i5cru")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="lit" type="StaticBody2D"]
+texture_filter = 1
+
+[node name="fandriana" type="Area2D" parent="."]
+texture_filter = 1
+script = ExtResource("1_7jcp6")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="fandriana"]
+polygon = PackedVector2Array(40, -56, 49, -51, 49, 67, -37, 68, -39, -55)
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_iywne")
+
+[node name="bed" type="AnimatedSprite2D" parent="."]
+material = SubResource("CanvasItemMaterial_iywne")
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_jir0i")
+animation = &"hide_pl"
+frame_progress = 0.81247
+
+[node name="TextureButton" type="Button" parent="."]
+offset_left = -16.0
+offset_top = -13.0
+offset_right = 24.0
+offset_bottom = 27.0
+scale = Vector2(0.8, 0.8)
+theme_override_styles/focus = SubResource("StyleBoxFlat_1bcxx")
+theme_override_styles/hover = SubResource("StyleBoxFlat_k3tre")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_jir0i")
+theme_override_styles/normal = SubResource("StyleBoxFlat_i5cru")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TextureButton"]
+position = Vector2(20, 20)
+sprite_frames = SubResource("SpriteFrames_ioada")
+frame = 1
+frame_progress = 0.0619335
+
+[node name="Node" parent="." instance=ExtResource("5_jir0i")]
+
+[node name="ProgressBar" parent="Node" index="0"]
+layout_mode = 0
+offset_left = -10.0
+offset_top = 8.0
+offset_right = 40.0
+offset_bottom = 35.0
+scale = Vector2(0.7, 0.7)
+
+[connection signal="body_entered" from="fandriana" to="fandriana" method="_on_body_entered"]
+[connection signal="body_exited" from="fandriana" to="fandriana" method="_on_body_exited"]
+[connection signal="pressed" from="TextureButton" to="fandriana" method="_on_texture_button_pressed"]
+
+[editable path="Node"]

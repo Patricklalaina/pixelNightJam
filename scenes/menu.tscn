@@ -1,0 +1,220 @@
+[gd_scene load_steps=12 format=3 uid="uid://ba7l3mkfhdtcs"]
+
+[ext_resource type="Script" uid="uid://dkhddl6lr4ebk" path="res://scripts/menu.gd" id="1_vjb58"]
+[ext_resource type="FontFile" uid="uid://c14812ee1qjnt" path="res://fonts/born2bsporty-fs.regular.otf" id="1_yqeox"]
+[ext_resource type="FontFile" uid="uid://ci60rcx6mhsa3" path="res://fonts/bulletin.regular.ttf" id="3_con2f"]
+
+[sub_resource type="Theme" id="Theme_vjb58"]
+default_font = ExtResource("1_yqeox")
+default_font_size = 25
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yqeox"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4ytvr"]
+bg_color = Color(0.866667, 0.482353, 0.313726, 0.52549)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vjb58"]
+bg_color = Color(0.866667, 0.482353, 0.313726, 0.52549)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_con2f"]
+bg_color = Color(0.311232, 0.182983, 0.00726745, 0.560784)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mhnvy"]
+bg_color = Color(0.360784, 0.211765, 0.0980392, 0.643137)
+
+[sub_resource type="LabelSettings" id="LabelSettings_4ytvr"]
+font = ExtResource("1_yqeox")
+font_size = 100
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g3eks"]
+content_margin_left = 196.0
+bg_color = Color(0.698039, 0.0980392, 0.196078, 0.694118)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+
+[node name="Menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vjb58")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.360784, 0.211765, 0.0980392, 0.705882)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -196.0
+offset_top = -70.0
+offset_right = 196.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_vjb58")
+
+[node name="play" type="Button" parent="VBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/focus = SubResource("StyleBoxFlat_yqeox")
+theme_override_styles/hover = SubResource("StyleBoxFlat_4ytvr")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_vjb58")
+theme_override_styles/normal = SubResource("StyleBoxFlat_con2f")
+text = "Jouer"
+
+[node name="setting" type="Button" parent="VBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/focus = SubResource("StyleBoxFlat_yqeox")
+theme_override_styles/hover = SubResource("StyleBoxFlat_4ytvr")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_vjb58")
+theme_override_styles/normal = SubResource("StyleBoxFlat_con2f")
+text = "Parametre"
+
+[node name="help" type="Button" parent="VBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/focus = SubResource("StyleBoxFlat_yqeox")
+theme_override_styles/hover = SubResource("StyleBoxFlat_4ytvr")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_vjb58")
+theme_override_styles/normal = SubResource("StyleBoxFlat_con2f")
+text = "Aide
+"
+
+[node name="quit" type="Button" parent="VBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/focus = SubResource("StyleBoxFlat_yqeox")
+theme_override_styles/hover = SubResource("StyleBoxFlat_4ytvr")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_vjb58")
+theme_override_styles/normal = SubResource("StyleBoxFlat_con2f")
+text = "Quitter
+"
+
+[node name="Label" type="Label" parent="."]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 258.0
+offset_top = -285.5
+offset_right = -261.0
+offset_bottom = -104.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_mhnvy")
+text = "Ank'af'na"
+label_settings = SubResource("LabelSettings_4ytvr")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="verif_container" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BG" type="ColorRect" parent="verif_container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.147672, 0.147672, 0.147672, 0.862745)
+
+[node name="verification" type="Control" parent="verif_container"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="verif_container/verification"]
+texture_filter = 1
+clip_contents = true
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_yqeox")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxFlat_g3eks")
+text = "Vous souhaitez quitter le Jeu ?"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="verif_container/verification"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -266.0
+offset_top = 82.0
+offset_right = 267.0
+offset_bottom = 137.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="no" type="Button" parent="verif_container/verification/HBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("3_con2f")
+theme_override_font_sizes/font_size = 20
+text = "Non"
+
+[node name="HSeparator" type="HSeparator" parent="verif_container/verification/HBoxContainer"]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_stretch_ratio = 2.72
+
+[node name="yes" type="Button" parent="verif_container/verification/HBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("1_yqeox")
+theme_override_font_sizes/font_size = 30
+text = "Oui"
+
+[connection signal="pressed" from="VBoxContainer/play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="VBoxContainer/setting" to="." method="_on_setting_pressed"]
+[connection signal="pressed" from="VBoxContainer/help" to="." method="_on_help_pressed"]
+[connection signal="pressed" from="VBoxContainer/quit" to="." method="_quit_pressed"]
+[connection signal="pressed" from="verif_container/verification/HBoxContainer/no" to="." method="_on_no_pressed"]
+[connection signal="pressed" from="verif_container/verification/HBoxContainer/yes" to="." method="_on_yes_pressed"]

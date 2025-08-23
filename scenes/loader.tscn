@@ -1,0 +1,90 @@
+[gd_scene load_steps=9 format=3 uid="uid://fu45e3ryqwcw"]
+
+[ext_resource type="FontFile" uid="uid://c14812ee1qjnt" path="res://fonts/born2bsporty-fs.regular.otf" id="1_hsw3t"]
+[ext_resource type="Script" uid="uid://44lvb30vi0ts" path="res://scripts/loader.gd" id="1_t6wgt"]
+[ext_resource type="Texture2D" uid="uid://ls5brf1xlrvo" path="res://assets/progress1.png" id="3_jfgw4"]
+[ext_resource type="Texture2D" uid="uid://djv2unlp4io02" path="res://assets/progress2.png" id="4_inh5x"]
+[ext_resource type="FontFile" uid="uid://ci60rcx6mhsa3" path="res://fonts/bulletin.regular.ttf" id="5_inh5x"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_inh5x"]
+bg_color = Color(0.360784, 0.211765, 0.0980392, 0.643137)
+
+[sub_resource type="LabelSettings" id="LabelSettings_t6wgt"]
+font = ExtResource("1_hsw3t")
+font_size = 100
+
+[sub_resource type="LabelSettings" id="LabelSettings_7k6qa"]
+font = ExtResource("5_inh5x")
+font_size = 10
+font_color = Color(0.925353, 0.925353, 0.925353, 1)
+
+[node name="Loader" type="Node2D"]
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_top = 2.0
+offset_right = 1153.0
+offset_bottom = 649.0
+size_flags_horizontal = 4
+script = ExtResource("1_t6wgt")
+
+[node name="ColorRect" type="ColorRect" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.360784, 0.211765, 0.0980392, 0.705882)
+
+[node name="Label" type="Label" parent="Control"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 258.0
+offset_top = 7.5
+offset_right = -261.0
+offset_bottom = 188.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_inh5x")
+text = "Ank'af'na"
+label_settings = SubResource("LabelSettings_t6wgt")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="progress" type="TextureProgressBar" parent="Control"]
+texture_filter = 1
+clip_contents = true
+layout_mode = 0
+offset_left = 438.0
+offset_top = 481.0
+offset_right = 566.0
+offset_bottom = 513.0
+scale = Vector2(2, 2)
+texture_under = ExtResource("3_jfgw4")
+texture_progress = ExtResource("4_inh5x")
+
+[node name="percent" type="Label" parent="Control/progress"]
+texture_filter = 1
+texture_repeat = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -14.5
+offset_top = -6.0
+offset_right = 14.5
+offset_bottom = 6.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "0%"
+label_settings = SubResource("LabelSettings_7k6qa")
+horizontal_alignment = 1
