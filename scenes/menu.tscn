@@ -1,8 +1,9 @@
-[gd_scene load_steps=12 format=3 uid="uid://ba7l3mkfhdtcs"]
+[gd_scene load_steps=13 format=3 uid="uid://ba7l3mkfhdtcs"]
 
 [ext_resource type="Script" uid="uid://dkhddl6lr4ebk" path="res://scripts/menu.gd" id="1_vjb58"]
 [ext_resource type="FontFile" uid="uid://c14812ee1qjnt" path="res://fonts/born2bsporty-fs.regular.otf" id="1_yqeox"]
 [ext_resource type="FontFile" uid="uid://ci60rcx6mhsa3" path="res://fonts/bulletin.regular.ttf" id="3_con2f"]
+[ext_resource type="AudioStream" uid="uid://d0kg5gnn2tpud" path="res://assets/sprite/click.wav" id="4_mhnvy"]
 
 [sub_resource type="Theme" id="Theme_vjb58"]
 default_font = ExtResource("1_yqeox")
@@ -211,6 +212,9 @@ size_flags_horizontal = 3
 theme_override_fonts/font = ExtResource("1_yqeox")
 theme_override_font_sizes/font_size = 30
 text = "Oui"
+
+[node name="click" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_mhnvy")
 
 [connection signal="pressed" from="VBoxContainer/play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="VBoxContainer/setting" to="." method="_on_setting_pressed"]

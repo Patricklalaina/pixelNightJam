@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://bqfn2pa2enovt"]
+[gd_scene load_steps=9 format=3 uid="uid://bqfn2pa2enovt"]
 
 [ext_resource type="Script" uid="uid://80dp2vcbwqt" path="res://scenes/game.gd" id="1_iywne"]
 [ext_resource type="PackedScene" uid="uid://d38tk8eshs5p6" path="res://scenes/player.tscn" id="1_uwrxv"]
 [ext_resource type="Texture2D" uid="uid://bwm4dy8nbkqd2" path="res://assets/sprite/TopDownHouse_FloorsAndWalls.png" id="1_yqjtg"]
 [ext_resource type="Texture2D" uid="uid://d8dr1clstuqr" path="res://assets/sprite/plan.png" id="2_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://b5pg1qfiqfhoc" path="res://scenes/lit.tscn" id="3_lbhrr"]
+[ext_resource type="AudioStream" uid="uid://ccqhfwx4ev4i7" path="res://assets/sprite/bg.wav" id="6_p57ef"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lbhrr"]
 texture = ExtResource("1_yqjtg")
@@ -234,3 +235,10 @@ position = Vector2(239, 113)
 
 [node name="player" parent="." instance=ExtResource("1_uwrxv")]
 position = Vector2(349, 141)
+
+[node name="music_game" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_p57ef")
+autoplay = true
+bus = &"BG_music"
+
+[connection signal="finished" from="music_game" to="." method="_on_music_game_finished"]

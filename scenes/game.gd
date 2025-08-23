@@ -1,10 +1,15 @@
 extends Node2D
 
 func _process(delta: float) -> void:
-	if GameManager.hideAnimationOK:
-		if GameManager.hidePL:
+	# Gérer la visibilité seulement si pas en cours d'animation maximize
+	if not GameManager.isMaximizing:
+		if GameManager.hideAnimationOK and GameManager.hidePL:
 			$player.visible = false
 			GameManager.show = false
-	if GameManager.timeOut:
-		$player.visible = true
-		GameManager.show = true
+		elif not GameManager.hidePL:
+			$player.visible = true
+			GameManager.show = true
+
+
+func _on_music_game_finished() -> void:
+	$music_game.play()

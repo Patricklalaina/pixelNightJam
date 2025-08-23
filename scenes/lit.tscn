@@ -1,10 +1,11 @@
-[gd_scene load_steps=17 format=3 uid="uid://b5pg1qfiqfhoc"]
+[gd_scene load_steps=18 format=3 uid="uid://b5pg1qfiqfhoc"]
 
 [ext_resource type="Script" uid="uid://dpwkputp58c7q" path="res://scripts/fandriana.gd" id="1_7jcp6"]
 [ext_resource type="Texture2D" uid="uid://dvra1bw773kwt" path="res://assets/sprite/fandriana.png" id="2_1bcxx"]
 [ext_resource type="Texture2D" uid="uid://op6bf5556oqh" path="res://assets/sprite/frame.png" id="3_1bcxx"]
 [ext_resource type="Texture2D" uid="uid://gkp51yv8yakm" path="res://assets/sprite/lit_hide.png" id="3_k3tre"]
 [ext_resource type="PackedScene" uid="uid://dsklocml6nqsh" path="res://scenes/node.tscn" id="5_jir0i"]
+[ext_resource type="AudioStream" uid="uid://d0kg5gnn2tpud" path="res://assets/sprite/click.wav" id="6_i5cru"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_iywne"]
 size = Vector2(68, 106)
@@ -130,6 +131,10 @@ offset_top = 8.0
 offset_right = 40.0
 offset_bottom = 35.0
 scale = Vector2(0.7, 0.7)
+
+[node name="btn" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_i5cru")
+bus = &"pl_btn"
 
 [connection signal="body_entered" from="fandriana" to="fandriana" method="_on_body_entered"]
 [connection signal="body_exited" from="fandriana" to="fandriana" method="_on_body_exited"]

@@ -237,3 +237,6 @@ shape = SubResource("RectangleShape2D_g2els")
 libraries = {
 &"": SubResource("AnimationLibrary_dqkch")
 }
+
+[node name="move" type="AudioStreamPlayer2D" parent="."]
+bus = &"pl_btn"
