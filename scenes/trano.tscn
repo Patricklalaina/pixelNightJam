@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://10863sf4s52j"]
+[gd_scene load_steps=6 format=3 uid="uid://10863sf4s52j"]
 
 [ext_resource type="Texture2D" uid="uid://bwm4dy8nbkqd2" path="res://assets/sprite/TopDownHouse_FloorsAndWalls.png" id="1_ki807"]
 [ext_resource type="Texture2D" uid="uid://d8dr1clstuqr" path="res://assets/sprite/plan.png" id="2_wmf8i"]
+[ext_resource type="Texture2D" uid="uid://okxkm1jvw1qd" path="res://assets/tapis.png" id="3_wmf8i"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lbhrr"]
 texture = ExtResource("1_ki807")
@@ -204,6 +205,13 @@ color = Color(0.431373, 0.431373, 0.431373, 0.603922)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_wmf8i")
+
+[node name="Tapis" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(-96.25, 66.25)
+rotation = 1.5708
+scale = Vector2(11.4397, 13.8695)
+texture = ExtResource("3_wmf8i")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 visible = false

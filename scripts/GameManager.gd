@@ -1,14 +1,19 @@
 extends Node
 
+signal player_caught  # émis quand un ennemi attrape le joueur
+
 @onready var hidePL: bool = false
 @onready var hideAnimationOK: bool = false
 @onready var timeOut: bool = false
 @onready var show: bool = true
 @onready var isMaximizing: bool = false
-@onready var timerActive: bool = false  # Nouveau flag pour contrôler le timer
+@onready var timerActive: bool = false  # timer de cachette
 @onready var volume_music: float = -6
 @onready var volume_audio: float = 0.0
 @onready var tmpOBJ = null
+
+# Etat jeu
+@onready var gameOver: bool = false
 
 func reset_player_state():
 	hidePL = false
@@ -31,6 +36,16 @@ func complete_sequence():
 	timeOut = false
 	isMaximizing = false
 	timerActive = false
+
+func lose_game():
+	if gameOver:
+		return
+	gameOver = true
+	print("Défaite: le joueur a été attrapé.")
+	emit_signal("player_caught")
+	# Option: mettre en pause ou changer de scène
+	# get_tree().paused = true
+	# get_tree().change_scene_to_file("res://scenes/menu.tscn")
 
 func _play_msc(stream: AudioStreamPlayer2D) -> void:
 	stream.play()

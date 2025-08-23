@@ -1,5 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://jlorl27yybth"]
+[gd_scene load_steps=5 format=3 uid="uid://jlorl27yybth"]
 
+[ext_resource type="Script" uid="uid://b5kjkwgw1j4r8" path="res://scripts/hud.gd" id="1_5ysmq"]
 [ext_resource type="Texture2D" uid="uid://cvladf7hbfln5" path="res://assets/sprite/time.png" id="1_oo0fn"]
 [ext_resource type="FontFile" uid="uid://ci60rcx6mhsa3" path="res://fonts/bulletin.regular.ttf" id="2_5ysmq"]
 
@@ -8,8 +9,10 @@ font = ExtResource("2_5ysmq")
 font_size = 25
 
 [node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_5ysmq")
 
 [node name="Timer" type="Timer" parent="."]
+wait_time = 360.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1

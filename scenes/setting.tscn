@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://b70up0rrd0da7"]
+[gd_scene load_steps=10 format=3 uid="uid://b70up0rrd0da7"]
 
 [ext_resource type="FontFile" uid="uid://c14812ee1qjnt" path="res://fonts/born2bsporty-fs.regular.otf" id="1_sjyvh"]
 [ext_resource type="Script" uid="uid://7mqxyobkqo58" path="res://scripts/setting.gd" id="1_u58eq"]
 [ext_resource type="AudioStream" uid="uid://ccqhfwx4ev4i7" path="res://assets/sprite/bg.wav" id="3_7k1fe"]
 [ext_resource type="AudioStream" uid="uid://d0kg5gnn2tpud" path="res://assets/sprite/click.wav" id="4_scrng"]
+[ext_resource type="Texture2D" uid="uid://bx4erouh56u0q" path="res://assets/sprite/back.svg" id="5_31ui4"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_u58eq"]
 font = ExtResource("1_sjyvh")
@@ -16,6 +17,10 @@ default_font_size = 28
 [sub_resource type="LabelSettings" id="LabelSettings_7k1fe"]
 font = ExtResource("1_sjyvh")
 font_size = 28
+
+[sub_resource type="LabelSettings" id="LabelSettings_31ui4"]
+font = ExtResource("1_sjyvh")
+font_size = 20
 
 [node name="settings" type="Control"]
 layout_mode = 3
@@ -46,7 +51,7 @@ offset_top = 71.0
 offset_right = 110.0
 offset_bottom = 161.0
 grow_horizontal = 2
-text = "VOLUME"
+text = "VOLUMES"
 label_settings = SubResource("LabelSettings_u58eq")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -196,8 +201,31 @@ bus = &"BG_music"
 stream = ExtResource("4_scrng")
 volume_db = 6.0
 
+[node name="menu" type="Button" parent="."]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 87.0
+offset_right = 676.0
+offset_bottom = 735.0
+scale = Vector2(0.12, 0.12)
+icon = ExtResource("5_31ui4")
+
+[node name="click" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_scrng")
+
+[node name="Label2" type="Label" parent="."]
+texture_filter = 1
+layout_mode = 0
+offset_left = 23.0
+offset_top = 612.0
+offset_right = 305.0
+offset_bottom = 635.0
+text = "Cree par Patrick Randriamanambola"
+label_settings = SubResource("LabelSettings_31ui4")
+
 [connection signal="pressed" from="HSplitContainer/minus" to="." method="_on_minus_pressed"]
 [connection signal="pressed" from="HSplitContainer/plus" to="." method="_on_plus_pressed"]
 [connection signal="pressed" from="HSplitContainer2/minus" to="." method="_on_minus_pressed2"]
 [connection signal="pressed" from="HSplitContainer2/plus" to="." method="_on_plus_pressed2"]
 [connection signal="finished" from="bg" to="." method="_on_bg_finished"]
+[connection signal="pressed" from="menu" to="." method="_on_menu_pressed"]
