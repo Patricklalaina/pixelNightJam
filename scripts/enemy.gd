@@ -268,11 +268,17 @@ func _refresh_player_ref() -> void:
 func _load_waypoints() -> void:
 	_waypoint_nodes.clear()
 
-	# 1) Waypoints assignés dans l’inspecteur (ordre exact)
-	for p in waypoints:
-		var n2d: Node2D = get_node_or_null(p) as Node2D
-		if n2d:
-			_waypoint_nodes.append(n2d)
+	# 0) Séquence par noms relative au parent de l'ennemi: ../point1, ../point2, ..., ../pointn
+	var parent_node: Node = get_parent()
+	if parent_node:
+		_gather_points_by_sequence(parent_node, _waypoint_nodes)
+
+	# 1) Waypoints assignés dans l’inspecteur (ordre exact) si rien trouvé
+	if _waypoint_nodes.is_empty():
+		for p in waypoints:
+			var n2d: Node2D = get_node_or_null(p) as Node2D
+			if n2d:
+				_waypoint_nodes.append(n2d)
 
 	# 2) Sinon, récupérer par groupe, filtré par conteneur si fourni
 	if _waypoint_nodes.is_empty():
@@ -352,7 +358,10 @@ func _recompute_subtarget() -> bool:
 		var tries: int = 0
 		while tries < _waypoint_nodes.size():
 			# Avance dans l'ordre de patrouille pour trouver une cible atteignable
-			target_id = (target_id + 1) % _waypoint_nodes.size() if loop_patrol else min(target_id + 1, _waypoint_nodes.size() - 1)
+			if loop_patrol:
+				target_id = (target_id + 1) % _waypoint_nodes.size()
+			else:
+				target_id = min(target_id + 1, _waypoint_nodes.size() - 1)
 			if target_id == saved:
 				break
 			path = _wp_astar.get_id_path(start_id, target_id)
@@ -390,7 +399,27 @@ static func _extract_trailing_int_from_string(s: String) -> int:
 	while i >= 0 and s[i] >= "0" and s[i] <= "9":
 		digits = s[i] + digits
 		i -= 1
-	return int(digits) if digits.length() > 0 else -1
+	if digits.length() > 0:
+		return int(digits)
+	return -1
+
+# Recherche séquentielle stricte sous le parent: ../point1, ../point2, ...
+func _gather_points_by_sequence(root: Node, out: Array[Node2D]) -> void:
+	var i: int = 1
+	while true:
+		var name1 := "point%d" % i
+		var node := root.get_node_or_null(NodePath(name1))
+		if node == null:
+			var name2 := "Point%d" % i
+			node = root.get_node_or_null(NodePath(name2))
+		if node == null:
+			# Arrêt à la première lacune pour respecter une séquence continue
+			break
+		if node is Node2D:
+			out.append(node as Node2D)
+		else:
+			push_warning("%s existe sous %s mais n'est pas un Node2D" % [node.name, root.get_path()])
+		i += 1
 
 func _trigger_game_over() -> void:
 	_game_over_triggered = true

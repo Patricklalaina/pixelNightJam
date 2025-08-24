@@ -135,11 +135,9 @@ position = Vector2(573, 455)
 [node name="enemy" parent="." instance=ExtResource("8_gee14")]
 position = Vector2(533, 122)
 player_path = NodePath("../player")
-waypoints = Array[NodePath]([NodePath("../point1"), NodePath("../point2"), NodePath("../point3"), NodePath("../point4"), NodePath("../point5"), NodePath("../point6"), NodePath("../point7"), NodePath("../point8"), NodePath("../point9"), NodePath("../point10"), NodePath("../point11"), NodePath("../point12"), NodePath("../point13"), NodePath("../point14"), NodePath("../point15"), NodePath("../point16"), NodePath("../point17"), NodePath("../point18"), NodePath("../point19")])
 
 [node name="collectible_spawner" parent="." instance=ExtResource("10_vtaks")]
 z_index = 100
-markers = Array[NodePath]([NodePath("Marker2D"), NodePath("Marker2D2"), NodePath("Marker2D3"), NodePath("Marker2D4"), NodePath("Marker2D5"), NodePath("Marker2D6"), NodePath("Marker2D7"), NodePath("Marker2D8"), NodePath("Marker2D9"), NodePath("Marker2D10"), NodePath("Marker2D11"), NodePath("Marker2D12"), NodePath("Marker2D13"), NodePath("Marker2D14"), NodePath("Marker2D15"), NodePath("Marker2D16"), NodePath("Marker2D17"), NodePath("Marker2D18"), NodePath("Marker2D19"), NodePath("Marker2D20"), NodePath("Marker2D21"), NodePath("Marker2D22"), NodePath("Marker2D23"), NodePath("Marker2D24"), NodePath("Marker2D25"), NodePath("Marker2D26"), NodePath("Marker2D27"), NodePath("Marker2D28"), NodePath("Marker2D29"), NodePath("Marker2D30"), NodePath("Marker2D31"), NodePath("Marker2D32"), NodePath("Marker2D33"), NodePath("Marker2D39"), NodePath("Marker2D40"), NodePath("Marker2D41"), NodePath("Marker2D42"), NodePath("Marker2D34"), NodePath("Marker2D35"), NodePath("Marker2D36"), NodePath("Marker2D37"), NodePath("Marker2D38")])
 
 [node name="Marker2D" type="Marker2D" parent="collectible_spawner"]
 position = Vector2(370, 78)

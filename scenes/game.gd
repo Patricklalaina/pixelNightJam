@@ -1,6 +1,9 @@
 extends Node2D
 
 func _ready() -> void:
+	# Réinitialise l'état de partie et le score à 0
+	GameManager.start_new_game()
+
 	# Récupère le node de timer de niveau (contenant Timer + Label) et démarre le compte
 	var level_hud = $Control/HUD
 	if level_hud and not level_hud.level_timeout.is_connected(_on_level_timeout):

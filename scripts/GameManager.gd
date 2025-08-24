@@ -22,6 +22,15 @@ func add_score(amount: int) -> void:
 	score = max(0, score + amount)
 	score_changed.emit(score)
 
+func reset_score() -> void:
+	score = 0
+	score_changed.emit(score)
+
+func start_new_game() -> void:
+	gameOver = false
+	reset_player_state()
+	reset_score()
+
 func reset_player_state():
 	hidePL = false
 	hideAnimationOK = false

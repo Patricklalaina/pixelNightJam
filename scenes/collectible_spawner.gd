@@ -23,7 +23,12 @@ var collectible_scene: PackedScene = null
 @export var marker_group: String = "collectible_marker"        # Option 3: groupe
 @export var search_whole_scene_fallback: bool = true           # Option 4: scan global si rien trouvé
 
-# Où instancier (sinon current_scene)
+# Option 0: séquence de noms (marker2D, marker2D2, ..., marker2Dn)
+@export var use_sequential_marker_names: bool = true
+# Racine où se trouvent les markers séquentiels. Si vide, on utilisera 'marker_container_path' s'il est défini, sinon 'self'
+@export_node_path("Node") var sequential_markers_root: NodePath = "."
+
+# O$"../point1"ù instancier (sinon current_scene)
 @export_node_path("Node") var spawn_parent_path: NodePath
 
 # Spawns initiaux au _ready (facultatif)
@@ -158,13 +163,25 @@ func _collect_markers() -> void:
 	_markers.clear()
 	_occupied.clear()
 
+	# 0) Séquence par noms: marker2D, marker2D2, ..., marker2Dn
+	if use_sequential_marker_names:
+		var root: Node = null
+		# Si un conteneur est indiqué, il est prioritaire pour cette stratégie
+		if marker_container_path != NodePath():
+			root = get_node_or_null(marker_container_path)
+		# Sinon, on utilise la racine séquentielle fournie (ou self par défaut)
+		if root == null:
+			root = get_node_or_null(sequential_markers_root) if (sequential_markers_root != NodePath()) else self
+		if root:
+			_gather_markers_by_sequence(root, _markers)
+
 	# 1) Liste explicite
 	for p in markers:
 		var n := get_node_or_null(p)
 		if n is Marker2D:
 			_markers.append(n as Marker2D)
 
-	# 2) Conteneur (recherche récursive)
+	# 2) Conteneur (recherche récursive) si rien trouvé jusque-là
 	if marker_container_path != NodePath() and _markers.is_empty():
 		var container := get_node_or_null(marker_container_path)
 		if container:
@@ -201,3 +218,22 @@ func _gather_markers_recursive(root: Node, out: Array[Marker2D]) -> void:
 		if child is Marker2D:
 			out.append(child as Marker2D)
 		_gather_markers_recursive(child, out)
+
+# Recherche séquentielle: marker2D, marker2D2, marker2D3, ...
+# Supporte aussi la variante 'Marker2D' si utilisé dans la scène.
+func _gather_markers_by_sequence(root: Node, out: Array[Marker2D]) -> void:
+	var i := 1
+	while true:
+		var name1 := "marker2D" if i == 1 else "marker2D%d" % i
+		var node := root.get_node_or_null(NodePath(name1))
+		if node == null:
+			var name2 := "Marker2D" if i == 1 else "Marker2D%d" % i
+			node = root.get_node_or_null(NodePath(name2))
+		if node == null:
+			# On arrête à la première lacune pour respecter une séquence continue
+			break
+		if node is Marker2D:
+			out.append(node as Marker2D)
+		else:
+			push_warning("%s existe sous %s mais n'est pas un Marker2D" % [node.name, root.get_path()])
+		i += 1
