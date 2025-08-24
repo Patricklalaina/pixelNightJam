@@ -70,6 +70,7 @@ var played: bool = false
 var animationInProgress: bool = false
 
 func _ready() -> void:
+	add_to_group("player")
 	anim.play("idle")
 	$AnimationPlayer.animation_finished.connect(_on_anim_finished)
 

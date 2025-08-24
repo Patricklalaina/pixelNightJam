@@ -86,6 +86,7 @@ label_settings = SubResource("LabelSettings_chmrd")
 vertical_alignment = 1
 
 [node name="menu" type="Button" parent="."]
+layout_mode = 0
 offset_left = 28.0
 offset_top = 36.0
 offset_right = 676.0

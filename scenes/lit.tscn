@@ -125,7 +125,6 @@ frame_progress = 0.0619335
 [node name="Node" parent="." instance=ExtResource("5_jir0i")]
 
 [node name="ProgressBar" parent="Node" index="0"]
-layout_mode = 0
 offset_left = -10.0
 offset_top = 8.0
 offset_right = 40.0

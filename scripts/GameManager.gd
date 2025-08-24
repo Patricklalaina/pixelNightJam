@@ -15,6 +15,13 @@ signal player_caught  # émis quand un ennemi attrape le joueur
 # Etat jeu
 @onready var gameOver: bool = false
 
+signal score_changed(new_score: int)
+var score: int = 0
+
+func add_score(amount: int) -> void:
+	score = max(0, score + amount)
+	score_changed.emit(score)
+
 func reset_player_state():
 	hidePL = false
 	hideAnimationOK = false

@@ -6,49 +6,43 @@ signal level_timeout
 
 @onready var timer: Timer = $Timer
 @onready var label: Label = $time
-
+@onready var score_label: Label = $ScoreLabel as Label
 func _ready() -> void:
-	add_to_group("LevelTimer")
-	GameManager.hud_level = self
+	add_to_group("HUD")
 	timer.one_shot = true
-	if label:
-		label.text = _format_time(timer.wait_time)
-	timer.timeout.connect(_on_timer_timeout)
+	if not timer.timeout.is_connected(_on_timer_timeout):
+		timer.timeout.connect(_on_timer_timeout)
+	label.text = _fmt(timer.wait_time)
+	if score_label:
+		score_label.text = str(GameManager.score)
+	GameManager.score_changed.connect(_on_score_changed)
+
+func _on_score_changed(new_score: int) -> void:
+	if score_label:
+		score_label.text = str(new_score)
 
 func start_level_timer(duration: float = -1.0) -> void:
 	if duration > 0:
 		timer.wait_time = duration
-	if label:
-		label.text = _format_time(timer.wait_time)
+	label.text = _fmt(timer.wait_time)
 	timer.start()
-	GameManager.level_timer_active = true
-	GameManager.level_time_total = timer.wait_time
-	GameManager.level_time_left = timer.wait_time
 	emit_signal("level_started", timer.wait_time)
 
 func stop_level_timer() -> void:
 	if not timer.is_stopped():
 		timer.stop()
-	if label:
-		label.text = "00:00"
-	GameManager.level_timer_active = false
+	label.text = "00:00"
 
 func _process(delta: float) -> void:
-	if GameManager.level_timer_active and not timer.is_stopped():
-		GameManager.level_time_left = timer.time_left
-		if label:
-			label.text = _format_time(timer.time_left)
+	if not timer.is_stopped():
+		label.text = _fmt(timer.time_left)
 		emit_signal("level_tick", timer.time_left)
 
 func _on_timer_timeout() -> void:
-	if label:
-		label.text = "00:00"
-	GameManager.level_timer_active = false
-	GameManager.level_time_left = 0
-	GameManager.win_level()
+	label.text = "00:00"
 	emit_signal("level_timeout")
 
-func _format_time(t: float) -> String:
+func _fmt(t: float) -> String:
 	var total := int(ceil(max(t, 0.0)))
 	var m := int(total / 60)
 	var s := int(total % 60)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bqfn2pa2enovt"]
+[gd_scene load_steps=12 format=3 uid="uid://bqfn2pa2enovt"]
 
 [ext_resource type="Script" uid="uid://80dp2vcbwqt" path="res://scenes/game.gd" id="1_iywne"]
 [ext_resource type="PackedScene" uid="uid://d38tk8eshs5p6" path="res://scenes/player.tscn" id="1_uwrxv"]
@@ -8,6 +8,7 @@
 [ext_resource type="AudioStream" uid="uid://ccqhfwx4ev4i7" path="res://assets/sprite/bg.wav" id="6_p57ef"]
 [ext_resource type="PackedScene" uid="uid://cfct72pmuxepa" path="res://scenes/armoire.tscn" id="7_u5sy4"]
 [ext_resource type="PackedScene" uid="uid://cqwliglyeho5e" path="res://scenes/enemy.tscn" id="8_gee14"]
+[ext_resource type="PackedScene" uid="uid://c7b7w3fm7657x" path="res://scenes/collectible_spawner.tscn" id="10_vtaks"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_p57ef"]
 size = Vector2(68, 106)
@@ -84,10 +85,10 @@ position = Vector2(367, 96)
 position = Vector2(370, 219)
 
 [node name="point4" type="Marker2D" parent="."]
-position = Vector2(443, 210)
+position = Vector2(444, 203)
 
 [node name="point5" type="Marker2D" parent="."]
-position = Vector2(502, 200)
+position = Vector2(532, 191)
 
 [node name="point6" type="Marker2D" parent="."]
 position = Vector2(535, 134)
@@ -117,10 +118,10 @@ position = Vector2(642, 336)
 position = Vector2(414, 456)
 
 [node name="point15" type="Marker2D" parent="."]
-position = Vector2(414, 358)
+position = Vector2(320, 358)
 
 [node name="point16" type="Marker2D" parent="."]
-position = Vector2(458, 358)
+position = Vector2(449, 358)
 
 [node name="point17" type="Marker2D" parent="."]
 position = Vector2(451, 274)
@@ -132,7 +133,139 @@ position = Vector2(472, 455)
 position = Vector2(573, 455)
 
 [node name="enemy" parent="." instance=ExtResource("8_gee14")]
-patrol_points = Array[NodePath]([NodePath("../point1"), NodePath("../point2"), NodePath("../point3"), NodePath("../point4"), NodePath("../point5"), NodePath("../point6"), NodePath("../point7"), NodePath("../point8"), NodePath("../point9"), NodePath("../point10"), NodePath("../point11"), NodePath("../point12"), NodePath("../point13"), NodePath("../point14"), NodePath("../point15"), NodePath("../point16"), NodePath("../point17"), NodePath("../point18"), NodePath("../point19")])
+position = Vector2(533, 122)
+player_path = NodePath("../player")
+waypoints = Array[NodePath]([NodePath("../point1"), NodePath("../point2"), NodePath("../point3"), NodePath("../point4"), NodePath("../point5"), NodePath("../point6"), NodePath("../point7"), NodePath("../point8"), NodePath("../point9"), NodePath("../point10"), NodePath("../point11"), NodePath("../point12"), NodePath("../point13"), NodePath("../point14"), NodePath("../point15"), NodePath("../point16"), NodePath("../point17"), NodePath("../point18"), NodePath("../point19")])
+
+[node name="collectible_spawner" parent="." instance=ExtResource("10_vtaks")]
+z_index = 100
+markers = Array[NodePath]([NodePath("Marker2D"), NodePath("Marker2D2"), NodePath("Marker2D3"), NodePath("Marker2D4"), NodePath("Marker2D5"), NodePath("Marker2D6"), NodePath("Marker2D7"), NodePath("Marker2D8"), NodePath("Marker2D9"), NodePath("Marker2D10"), NodePath("Marker2D11"), NodePath("Marker2D12"), NodePath("Marker2D13"), NodePath("Marker2D14"), NodePath("Marker2D15"), NodePath("Marker2D16"), NodePath("Marker2D17"), NodePath("Marker2D18"), NodePath("Marker2D19"), NodePath("Marker2D20"), NodePath("Marker2D21"), NodePath("Marker2D22"), NodePath("Marker2D23"), NodePath("Marker2D24"), NodePath("Marker2D25"), NodePath("Marker2D26"), NodePath("Marker2D27"), NodePath("Marker2D28"), NodePath("Marker2D29"), NodePath("Marker2D30"), NodePath("Marker2D31"), NodePath("Marker2D32"), NodePath("Marker2D33"), NodePath("Marker2D39"), NodePath("Marker2D40"), NodePath("Marker2D41"), NodePath("Marker2D42"), NodePath("Marker2D34"), NodePath("Marker2D35"), NodePath("Marker2D36"), NodePath("Marker2D37"), NodePath("Marker2D38")])
+
+[node name="Marker2D" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(370, 78)
+
+[node name="Marker2D2" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(370, 126)
+
+[node name="Marker2D3" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(370, 157)
+
+[node name="Marker2D4" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(370, 199)
+
+[node name="Marker2D5" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(370, 242)
+
+[node name="Marker2D6" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(871, 300)
+
+[node name="Marker2D7" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(871, 342)
+
+[node name="Marker2D8" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(871, 385)
+
+[node name="Marker2D9" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(446, 300)
+
+[node name="Marker2D10" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(446, 342)
+
+[node name="Marker2D11" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(446, 385)
+
+[node name="Marker2D12" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(490, 300)
+
+[node name="Marker2D13" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(490, 342)
+
+[node name="Marker2D14" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(490, 385)
+
+[node name="Marker2D15" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(529, 255)
+
+[node name="Marker2D16" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(529, 297)
+
+[node name="Marker2D17" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(529, 340)
+
+[node name="Marker2D18" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(573, 255)
+
+[node name="Marker2D19" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(573, 297)
+
+[node name="Marker2D20" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(573, 340)
+
+[node name="Marker2D21" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(529, 389)
+
+[node name="Marker2D22" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(529, 431)
+
+[node name="Marker2D23" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(529, 474)
+
+[node name="Marker2D24" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(573, 389)
+
+[node name="Marker2D25" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(573, 431)
+
+[node name="Marker2D26" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(573, 474)
+
+[node name="Marker2D27" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(664, 308)
+
+[node name="Marker2D28" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(664, 350)
+
+[node name="Marker2D29" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(664, 393)
+
+[node name="Marker2D30" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(708, 308)
+
+[node name="Marker2D31" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(708, 350)
+
+[node name="Marker2D32" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(708, 393)
+
+[node name="Marker2D33" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(775, 296)
+
+[node name="Marker2D39" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(775, 251)
+
+[node name="Marker2D40" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(838, 251)
+
+[node name="Marker2D41" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(893, 101)
+
+[node name="Marker2D42" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(707, 101)
+
+[node name="Marker2D34" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(775, 338)
+
+[node name="Marker2D35" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(775, 381)
+
+[node name="Marker2D36" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(819, 296)
+
+[node name="Marker2D37" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(819, 338)
+
+[node name="Marker2D38" type="Marker2D" parent="collectible_spawner"]
+position = Vector2(819, 381)
 
 [connection signal="finished" from="music_game" to="." method="_on_music_game_finished"]
 

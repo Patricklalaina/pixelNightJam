@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Sneakn_peek"
+config/name="Ankiafina"
 run/main_scene="uid://fu45e3ryqwcw"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
