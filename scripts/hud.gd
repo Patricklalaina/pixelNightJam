@@ -7,48 +7,19 @@ signal level_timeout
 @onready var timer: Timer = $Timer
 @onready var label: Label = $time
 @onready var score_label: Label = $ScoreLabel as Label
-
-# Optionnels si présents
-@onready var level_label: Label = get_node_or_null("LevelLabel")
-@onready var quota_label: Label = get_node_or_null("QuotaLabel")
-
-var _current_quota: int = 0
-
 func _ready() -> void:
 	add_to_group("HUD")
 	timer.one_shot = true
 	if not timer.timeout.is_connected(_on_timer_timeout):
 		timer.timeout.connect(_on_timer_timeout)
 	label.text = _fmt(timer.wait_time)
-
-	if not GameManager.score_changed.is_connected(_on_score_changed):
-		GameManager.score_changed.connect(_on_score_changed)
-	if not GameManager.level_changed.is_connected(_on_level_changed):
-		GameManager.level_changed.connect(_on_level_changed)
-
-	_current_quota = GameManager.get_level_quota_current()
-	_update_level_labels()
-
-	# Affiche progression "x/y"
 	if score_label:
-		score_label.text = str(GameManager.get_level_progress_score()) + "/" + str(_current_quota)
-
-func _on_level_changed(level: int, quota: int, time_limit: float) -> void:
-	_current_quota = quota
-	_update_level_labels()
-	_on_score_changed(GameManager.score)  # refresh x/y
-
-func _update_level_labels() -> void:
-	if level_label:
-		level_label.text = "Niveau: " + str(GameManager.level)
-	if quota_label:
-		quota_label.text = "Quota: " + str(_current_quota)
+		score_label.text = str(GameManager.score)
+	GameManager.score_changed.connect(_on_score_changed)
 
 func _on_score_changed(new_score: int) -> void:
 	if score_label:
-		var prog := GameManager.get_level_progress_score()
-		var q := GameManager.get_level_quota_current()
-		score_label.text = str(prog) + "/" + str(q)
+		score_label.text = str(new_score)
 
 func start_level_timer(duration: float = -1.0) -> void:
 	if duration > 0:

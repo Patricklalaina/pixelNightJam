@@ -15,95 +15,30 @@ signal player_caught  # émis quand un ennemi attrape le joueur
 # Etat jeu
 @onready var gameOver: bool = false
 
-# Indique si le prochain chargement de game.tscn démarre un nouveau run (score=0, level=1)
-var new_run: bool = true
-
-# Score
 signal score_changed(new_score: int)
 var score: int = 0
-
-# ====== Système de niveaux ======
-signal level_changed(level: int, quota: int, time_limit: float)
-
-var level: int = 1
-var level_start_score: int = 0
-var last_passed_level: int = 0  # pour l'écran de transition
-
-# Paramètres (ajustables)
-var base_quota: int = 10           # quota niveau 1 (ta demande)
-var quota_growth: float = 1.50     # quota augmente par niveau (ex: +50%)
-var base_time: float = 50.0        # timer niveau 1 en secondes (ta demande)
-var time_growth: float = 1.10      # le timer augmente par niveau (ex: +10% ou ajuste à ton goût)
-
-func get_level_quota(l: int = level) -> int:
-	var q := float(base_quota) * pow(quota_growth, float(max(0, l - 1)))
-	return max(1, int(ceil(q)))
-
-func get_level_time(l: int = level) -> float:
-	var t := float(base_time) * pow(time_growth, float(max(0, l - 1)))
-	return max(1.0, t)
-
-func get_level_progress_score() -> int:
-	return max(0, score - level_start_score)
-
-func get_level_quota_current() -> int:
-	return get_level_quota(level)
-
-func has_met_quota() -> bool:
-	return get_level_progress_score() >= get_level_quota_current()
 
 # ====== Stats persistantes ======
 const STATS_PATH := "user://stats.json"
 signal stats_updated
-var stats: Array[Dictionary] = []  # {"score": int, "won": bool, "date": String}
+var stats: Array[Dictionary] = []  # chaque entrée: {"score": int, "won": bool, "date": String}
 
 func _ready() -> void:
 	load_stats()
 
-# ====== Score API ======
 func add_score(amount: int) -> void:
 	score = max(0, score + amount)
 	score_changed.emit(score)
-	# Passage immédiat si quota atteint -> transition niveau
-	if has_met_quota() and not gameOver:
-		perform_level_up_transition()
 
 func reset_score() -> void:
 	score = 0
 	score_changed.emit(score)
 
-# ====== Gestion de partie / niveaux ======
 func start_new_game() -> void:
 	gameOver = false
 	reset_player_state()
 	reset_score()
-	level = 1
-	level_start_score = 0
-	new_run = false
-	_emit_level_changed()
 
-func _prepare_next_level() -> void:
-	# Pose last_passed_level puis incrémente
-	last_passed_level = level
-	level += 1
-	level_start_score = score
-
-func start_next_level() -> void:
-	# Public si besoin (n’incrémente QUE si tu le veux manuellement)
-	_prepare_next_level()
-	_emit_level_changed()
-
-func _emit_level_changed() -> void:
-	var quota := get_level_quota(level)
-	var time_limit := get_level_time(level)
-	level_changed.emit(level, quota, time_limit)
-
-func perform_level_up_transition() -> void:
-	# Transition: prépare le prochain niveau et va sur win.tscn
-	_prepare_next_level()
-	get_tree().change_scene_to_file("res://scenes/win.tscn")
-
-# ====== Etat joueur (existant) ======
 func reset_player_state() -> void:
 	hidePL = false
 	hideAnimationOK = false
@@ -132,28 +67,29 @@ func lose_game() -> void:
 	gameOver = true
 	print("Défaite: le joueur a été attrapé.")
 	emit_signal("player_caught")
+	# Option: mettre en pause ou changer de scène
 	# get_tree().paused = true
+	# get_tree().change_scene_to_file("res://scenes/menu.tscn")
 
-# ====== Utility Audio (existant) ======
 func _play_msc(stream: AudioStreamPlayer2D) -> void:
 	stream.play()
+	# Attendre la durée complète
 	await get_tree().create_timer(1.2).timeout
 	print("OK pret")
 
-# ====== API Stats (existant) ======
+# ====== API Stats ======
 func record_game_result(final_score: int, won: bool) -> void:
+	# S'assurer que stats est chargée
 	if stats.is_empty():
 		load_stats()
 	var entry: Dictionary = {
 		"score": int(final_score),
 		"won": bool(won),
-		"date": Time.get_datetime_string_from_system(true)
+		"date": Time.get_datetime_string_from_system(true)  # "YYYY-MM-DD HH:MM:SS"
 	}
 	stats.append(entry)
 	save_stats()
 	stats_updated.emit()
-	# Fin de run
-	new_run = true
 
 func load_stats() -> void:
 	stats.clear()
@@ -188,7 +124,7 @@ func get_stats_table_text() -> String:
 		var line := "%s | %s | %10s | %s" % [num, date, res, sc]
 		lines.append(line)
 	return "\n".join(lines)
-
+	
 func get_stats_bbcode() -> String:
 	var lines: Array[String] = []
 	lines.append("[b]Historique des parties[/b]")
