@@ -12,6 +12,7 @@ class_name Enemy
 @export var loop_patrol: bool = true
 
 # Ligne de vue vers le joueur (coche Walls + Player)
+# IMPORTANT: Assure-toi que 'Walls' est bien coché ici (et éventuellement 'Player').
 @export_flags_2d_physics var los_collision_mask: int = 1
 # Visibilité entre waypoints (coche uniquement Walls)
 @export_flags_2d_physics var nav_collision_mask: int = 1
@@ -21,9 +22,16 @@ class_name Enemy
 @export var stuck_distance_epsilon: float = 0.6
 @export var stuck_time_threshold: float = 0.3
 
+# Kill à proximité: distance et options
+@export var kill_distance: float = 32.0
+@export var require_line_of_sight_for_kill: bool = true
+@export var respect_player_hidden: bool = true
+
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D as AnimatedSprite2D
 @onready var detection_area: Area2D = get_node_or_null("DetectionArea") as Area2D
 @onready var detection_shape: CollisionShape2D = (detection_area.get_node_or_null("CollisionShape2D") as CollisionShape2D) if detection_area else null
+# Optionnel: une petite Area2D dédiée à l'impact si présente
+@onready var kill_area: Area2D = get_node_or_null("KillArea") as Area2D
 
 var _player: Node2D = null
 var _player_in_radius: bool = false
@@ -54,6 +62,14 @@ func _ready() -> void:
 			detection_area.body_entered.connect(_on_detection_body_entered)
 		if not detection_area.body_exited.is_connected(_on_detection_body_exited):
 			detection_area.body_exited.connect(_on_detection_body_exited)
+		if not detection_area.area_entered.is_connected(_on_detection_area_entered):
+			detection_area.area_entered.connect(_on_detection_area_entered)
+
+	if kill_area:
+		if not kill_area.body_entered.is_connected(_on_kill_area_entered):
+			kill_area.body_entered.connect(_on_kill_area_entered)
+		if not kill_area.area_entered.is_connected(_on_kill_area_area_entered):
+			kill_area.area_entered.connect(_on_kill_area_area_entered)
 
 	_refresh_player_ref()
 	_load_waypoints()
@@ -70,8 +86,10 @@ func _physics_process(delta: float) -> void:
 	if _player == null or not is_instance_valid(_player):
 		_refresh_player_ref()
 
-	# Poursuite seulement si: dans zone + joueur visible + LOS dégagée
-	var should_chase: bool = _player_in_radius and GameManager.show and _player != null and _has_line_of_sight()
+	# Poursuite si: dans zone + LOS dégagée ET joueur pas "caché" (si respect_player_hidden)
+	var sees_player := _player_in_radius and _player != null and _has_line_of_sight()
+	var hidden_block := respect_player_hidden and _is_player_hidden()
+	var should_chase: bool = sees_player and not hidden_block
 
 	if should_chase:
 		_set_velocity_chase(delta)
@@ -81,7 +99,7 @@ func _physics_process(delta: float) -> void:
 	var intended_move: bool = velocity.length() > 0.05
 	move_and_slide()
 
-	# Détection de blocage
+	# Déblocage
 	var moved: float = (global_position - _last_pos).length()
 	if intended_move:
 		_stuck_time = _stuck_time + get_process_delta_time() if moved < stuck_distance_epsilon else 0.0
@@ -91,7 +109,6 @@ func _physics_process(delta: float) -> void:
 	if _stuck_time >= stuck_time_threshold:
 		_steer_sign = -_steer_sign
 		_steer_cooldown = steer_cooldown_time
-		# En patrouille: si bloqué, recalculer sous-cible, ou passer au prochain waypoint
 		if not should_chase:
 			if not _recompute_subtarget():
 				_advance_wp()
@@ -99,7 +116,12 @@ func _physics_process(delta: float) -> void:
 		velocity = Vector2.ZERO
 		_stuck_time = 0.0
 
+	# 1) Collision physique durant le slide
 	_check_player_collision()
+
+	# 2) Kill par proximité indépendante du mouvement et du radius
+	_check_proximity_kill()
+
 	_update_move_anim()
 	_last_pos = global_position
 
@@ -119,36 +141,29 @@ func _set_velocity_patrol(delta: float) -> void:
 		velocity = Vector2.ZERO
 		return
 
-	# Nettoyer les nodes invalides
 	_prune_invalid_waypoints()
 	if _waypoint_nodes.is_empty():
 		velocity = Vector2.ZERO
 		return
 
-	# Recalculer la sous-cible si nécessaire
 	var target_reached: bool = false
 	if _subtarget_id == -1:
 		target_reached = _recompute_subtarget()
 
-	# Position de la sous-cible
 	if _subtarget_id != -1 and _wp_astar.has_point(_subtarget_id):
 		var sub_pos: Vector2 = _waypoint_nodes[_subtarget_id].global_position
 		var to_sub: Vector2 = sub_pos - global_position
 		if to_sub.length() <= waypoint_tolerance:
-			# On est arrivé sur cette sous-étape: recalculer la suivante
 			target_reached = _recompute_subtarget()
 			if target_reached:
-				# On a réellement atteint le waypoint visé -> passer au suivant
 				_advance_wp()
 				_recompute_subtarget()
 
-	# Calcul final de la direction
 	if _subtarget_id != -1 and _wp_astar.has_point(_subtarget_id):
 		var sub_pos2: Vector2 = _waypoint_nodes[_subtarget_id].global_position
 		var dir: Vector2 = (sub_pos2 - global_position).normalized()
 		velocity = _avoid_walls(dir, delta) * speed
 	else:
-		# Pas de sous-cible (graph coupé) -> s'arrêter
 		velocity = Vector2.ZERO
 
 func _advance_wp() -> void:
@@ -198,7 +213,6 @@ func _has_line_of_sight() -> bool:
 	var params: PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(from, to)
 	params.collision_mask = los_collision_mask
 
-	# exclude = Array[RID] (Godot 4)
 	var exclude: Array[RID] = []
 	exclude.append(self.get_rid())
 	if detection_area:
@@ -207,28 +221,33 @@ func _has_line_of_sight() -> bool:
 
 	var hit: Dictionary = space.intersect_ray(params)
 	if hit.is_empty():
+		# rien entre nous -> LOS OK
 		return true
 	var collider: Object = hit.get("collider")
-	if collider == _player:
-		return true
-	if collider is Node:
-		var n: Node = collider as Node
-		return n.is_in_group("player")
-	return false
+	# Si le premier hit est le joueur -> LOS OK
+	return collider == _player or _is_player_node(collider)
 
 func _check_player_collision() -> void:
 	for i in range(get_slide_collision_count()):
 		var c: KinematicCollision2D = get_slide_collision(i)
 		var col: Object = c.get_collider()
-		if col == _player:
-			if GameManager.show and not _game_over_triggered:
-				_trigger_game_over()
-				return
-		elif col is Node:
-			var n: Node = col as Node
-			if n.is_in_group("player") and GameManager.show and not _game_over_triggered:
-				_trigger_game_over()
-				return
+		if col == null:
+			continue
+		if col == _player or _is_player_node(col):
+			if not _game_over_triggered:
+				# On respecte ici aussi le mur et le "caché" si demandé
+				if (not require_line_of_sight_for_kill or _has_line_of_sight()) and (not respect_player_hidden or not _is_player_hidden()):
+					_trigger_game_over()
+					return
+
+func _check_proximity_kill() -> void:
+	if _game_over_triggered or _player == null or not is_instance_valid(_player):
+		return
+	# Distance brute
+	if global_position.distance_squared_to(_player.global_position) <= kill_distance * kill_distance:
+		# Respecte mur et "caché" selon options
+		if (not require_line_of_sight_for_kill or _has_line_of_sight()) and (not respect_player_hidden or not _is_player_hidden()):
+			_trigger_game_over()
 
 func _update_move_anim() -> void:
 	if anim == null:
@@ -244,43 +263,68 @@ func _update_move_anim() -> void:
 func _on_detection_body_entered(body: Node) -> void:
 	if body == null:
 		return
-	if (body.name == "player") or body.is_in_group("player"):
+	# Cette zone sert seulement à activer la poursuite
+	if _is_player_node(body):
+		# Si on respecte l'état "caché", ignorer l'entrée si le joueur est caché
+		if respect_player_hidden and _is_player_hidden():
+			return
 		_player_in_radius = true
 		if _player == null and body is Node2D:
 			_player = body as Node2D
 
 func _on_detection_body_exited(body: Node) -> void:
-	if (body.name == "player") or body.is_in_group("player"):
+	if _is_player_node(body):
 		_player_in_radius = false
+
+func _on_detection_area_entered(area: Area2D) -> void:
+	if area and _is_player_node(area):
+		# Si on respecte l'état "caché", ignorer l'entrée si le joueur est caché
+		if respect_player_hidden and _is_player_hidden():
+			return
+		_player_in_radius = true
+		var owner_node := area.get_owner()
+		if _player == null and owner_node and owner_node is Node2D:
+			_player = owner_node as Node2D
+
+func _on_kill_area_entered(obj: Node) -> void:
+	if obj and _is_player_node(obj) and not _game_over_triggered:
+		if (not require_line_of_sight_for_kill or _has_line_of_sight()) and (not respect_player_hidden or not _is_player_hidden()):
+			_trigger_game_over()
+
+func _on_kill_area_area_entered(area: Area2D) -> void:
+	if area and _is_player_node(area) and not _game_over_triggered:
+		if (not require_line_of_sight_for_kill or _has_line_of_sight()) and (not respect_player_hidden or not _is_player_hidden()):
+			_trigger_game_over()
 
 func _refresh_player_ref() -> void:
 	if player_path != NodePath():
 		_player = get_node_or_null(player_path) as Node2D
 	if _player == null:
-		var n1: Node = get_tree().get_first_node_in_group("player")
+		var n1: Node = get_tree().get_first_node_in_group("Player")
+		if n1 == null:
+			n1 = get_tree().get_first_node_in_group("player")
 		if n1 and n1 is Node2D:
 			_player = n1 as Node2D
 	if _player == null:
 		var n2: Node = get_tree().get_root().find_child("player", true, false)
+		if n2 == null:
+			n2 = get_tree().get_root().find_child("Player", true, false)
 		if n2 and n2 is Node2D:
 			_player = n2 as Node2D
 
 func _load_waypoints() -> void:
 	_waypoint_nodes.clear()
 
-	# 0) Séquence par noms relative au parent de l'ennemi: ../point1, ../point2, ..., ../pointn
 	var parent_node: Node = get_parent()
 	if parent_node:
 		_gather_points_by_sequence(parent_node, _waypoint_nodes)
 
-	# 1) Waypoints assignés dans l’inspecteur (ordre exact) si rien trouvé
 	if _waypoint_nodes.is_empty():
 		for p in waypoints:
 			var n2d: Node2D = get_node_or_null(p) as Node2D
 			if n2d:
 				_waypoint_nodes.append(n2d)
 
-	# 2) Sinon, récupérer par groupe, filtré par conteneur si fourni
 	if _waypoint_nodes.is_empty():
 		var container: Node = null
 		if patrol_container_path != NodePath():
@@ -291,7 +335,6 @@ func _load_waypoints() -> void:
 				if container == null or (container is Node and (container as Node).is_ancestor_of(n2d2)):
 					_waypoint_nodes.append(n2d2)
 
-		# Tri déterministe: suffixe numérique (WP1, WP2...) puis nom
 		_waypoint_nodes.sort_custom(func(a: Node2D, b: Node2D) -> bool:
 			var an: String = a.name
 			var bn: String = b.name
@@ -307,11 +350,9 @@ func _load_waypoints() -> void:
 
 func _build_waypoint_graph() -> void:
 	_wp_astar = AStar2D.new()
-	# Points
 	for i in range(_waypoint_nodes.size()):
 		var pos: Vector2 = _waypoint_nodes[i].global_position
 		_wp_astar.add_point(i, pos)
-	# Connexions (LOS non bloquée par les murs)
 	for i in range(_waypoint_nodes.size()):
 		for j in range(i + 1, _waypoint_nodes.size()):
 			var a: Vector2 = _waypoint_nodes[i].global_position
@@ -323,7 +364,6 @@ func _is_clear_path(a: Vector2, b: Vector2) -> bool:
 	var space: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
 	var params: PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(a, b)
 	params.collision_mask = nav_collision_mask
-	# Pas besoin d'exclude pour tester murs entre deux waypoints
 	var hit: Dictionary = space.intersect_ray(params)
 	return hit.is_empty()
 
@@ -337,7 +377,6 @@ func _find_nearest_waypoint_id(pos: Vector2) -> int:
 			best_id = i
 	return best_id
 
-# Recalcule la sous-cible (noeud A* suivant). Retourne true si la cible finale (waypoint courant) est déjà atteinte.
 func _recompute_subtarget() -> bool:
 	if _waypoint_nodes.is_empty():
 		_subtarget_id = -1
@@ -349,15 +388,12 @@ func _recompute_subtarget() -> bool:
 		return false
 
 	var target_id: int = clamp(_wp_index, 0, _waypoint_nodes.size() - 1)
-
-	# Chemin vers le waypoint cible; si impossible, essayer les suivants
 	var path: PackedInt64Array = _wp_astar.get_id_path(start_id, target_id)
 
 	if path.size() == 0:
 		var saved: int = target_id
 		var tries: int = 0
 		while tries < _waypoint_nodes.size():
-			# Avance dans l'ordre de patrouille pour trouver une cible atteignable
 			if loop_patrol:
 				target_id = (target_id + 1) % _waypoint_nodes.size()
 			else:
@@ -370,18 +406,15 @@ func _recompute_subtarget() -> bool:
 				break
 			tries += 1
 
-	# Toujours pas de chemin -> pas de sous-cible
 	if path.size() == 0:
 		_subtarget_id = -1
 		return false
 
-	# Path contient start -> ... -> target
 	if path.size() <= 1:
-		# Déjà sur un waypoint (start==target) -> considéré atteint
 		_subtarget_id = -1
 		return true
 
-	_subtarget_id = int(path[1])  # prochain noeud à atteindre
+	_subtarget_id = int(path[1])
 	return false
 
 func _prune_invalid_waypoints() -> void:
@@ -403,7 +436,6 @@ static func _extract_trailing_int_from_string(s: String) -> int:
 		return int(digits)
 	return -1
 
-# Recherche séquentielle stricte sous le parent: ../point1, ../point2, ...
 func _gather_points_by_sequence(root: Node, out: Array[Node2D]) -> void:
 	var i: int = 1
 	while true:
@@ -413,7 +445,6 @@ func _gather_points_by_sequence(root: Node, out: Array[Node2D]) -> void:
 			var name2 := "Point%d" % i
 			node = root.get_node_or_null(NodePath(name2))
 		if node == null:
-			# Arrêt à la première lacune pour respecter une séquence continue
 			break
 		if node is Node2D:
 			out.append(node as Node2D)
@@ -421,6 +452,36 @@ func _gather_points_by_sequence(root: Node, out: Array[Node2D]) -> void:
 			push_warning("%s existe sous %s mais n'est pas un Node2D" % [node.name, root.get_path()])
 		i += 1
 
+func _is_player_node(o: Object) -> bool:
+	if o == null:
+		return false
+	if o is Node:
+		var n := o as Node
+		if n.is_in_group("Player") or n.is_in_group("player"):
+			return true
+		var nm := n.name.to_lower()
+		return nm == "player"
+	return false
+
+func _is_player_hidden() -> bool:
+	if _player == null or not is_instance_valid(_player):
+		return false
+	# 1) Méthode dédiée
+	if (_player as Object).has_method("is_hidden"):
+		return (_player as Object).call("is_hidden")
+	# 2) Propriété booléenne "hidden"
+	if "hidden" in _player:
+		var v = (_player as Node).get("hidden")
+		if typeof(v) == TYPE_BOOL:
+			return v
+	# 3) CanvasItem.visible (Node2D hérite de CanvasItem)
+	if _player is CanvasItem:
+		return not (_player as CanvasItem).visible
+	return false
+
 func _trigger_game_over() -> void:
 	_game_over_triggered = true
+	set_physics_process(false)
+	if GameManager and GameManager.has_method("record_game_result"):
+		GameManager.record_game_result(GameManager.score, false)
 	get_tree().change_scene_to_file("res://scenes/game_over.tscn")

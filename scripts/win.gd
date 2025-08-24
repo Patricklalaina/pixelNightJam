@@ -3,7 +3,7 @@ extends Control
 func _ready() -> void:
 	await get_tree().process_frame
 
-	# Focus "Rejouer" si présent
+	# Focus sûr sur "Rejouer"
 	var retry_btn := get_node_or_null("ColorRect/VBoxContainer/Buttons/Retry") as Button
 	if retry_btn:
 		retry_btn.grab_focus()
@@ -12,13 +12,13 @@ func _ready() -> void:
 	if not GameManager.stats_updated.is_connected(_on_stats_updated):
 		GameManager.stats_updated.connect(_on_stats_updated)
 
-	# Titre des stats (séparé du corps)
+	# Titre des stats
 	var stats_title := get_node_or_null("ColorRect/VBoxContainer/StatsTitle") as Label
 	if stats_title:
 		stats_title.text = "Historique des parties"
 		stats_title.add_theme_font_size_override("font_size", 30)
 
-	# Remplir la liste
+	# Peupler la liste
 	_populate_stats_list()
 
 func _on_stats_updated() -> void:
@@ -29,14 +29,14 @@ func _populate_stats_list() -> void:
 	if content == null:
 		return
 
-	# S'assure que le contenu s'étire à la largeur du viewport du Scroll
+	# S'étire à la largeur du viewport du Scroll
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
 	# Nettoyage
 	for child in content.get_children():
 		child.queue_free()
 
-	# Pas de stats
+	# Aucune stat
 	if GameManager.stats.is_empty():
 		var empty := Label.new()
 		empty.text = "Aucune partie enregistrée."

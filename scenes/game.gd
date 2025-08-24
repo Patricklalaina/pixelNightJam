@@ -2,7 +2,8 @@ extends Node2D
 
 func _ready() -> void:
 	# Réinitialise l'état de partie et le score à 0
-	GameManager.start_new_game()
+	if "start_new_game" in GameManager:
+		GameManager.start_new_game()
 
 	# Récupère le node de timer de niveau (contenant Timer + Label) et démarre le compte
 	var level_hud = $Control/HUD
@@ -22,13 +23,11 @@ func _process(delta: float) -> void:
 			$player.visible = true
 			GameManager.show = true
 
-
 func _on_level_timeout() -> void:
 	print("Victoire - fin du niveau (timer de niveau)")
-	# Exemple: mettre en pause et/ou changer de scène
-	# get_tree().paused = true
-	# get_tree().change_scene_to_file("res://scenes/menu.tscn")
-
+	# Enregistrer la victoire et afficher l'écran de victoire avec les stats
+	GameManager.record_game_result(GameManager.score, true)
+	get_tree().change_scene_to_file("res://scenes/win.tscn")
 
 func _on_music_game_finished() -> void:
 	$music_game.play()

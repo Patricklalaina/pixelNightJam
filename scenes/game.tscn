@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bqfn2pa2enovt"]
+[gd_scene load_steps=15 format=3 uid="uid://bqfn2pa2enovt"]
 
 [ext_resource type="Script" uid="uid://80dp2vcbwqt" path="res://scenes/game.gd" id="1_iywne"]
 [ext_resource type="PackedScene" uid="uid://d38tk8eshs5p6" path="res://scenes/player.tscn" id="1_uwrxv"]
@@ -8,6 +8,7 @@
 [ext_resource type="AudioStream" uid="uid://ccqhfwx4ev4i7" path="res://assets/sprite/bg.wav" id="6_p57ef"]
 [ext_resource type="PackedScene" uid="uid://cfct72pmuxepa" path="res://scenes/armoire.tscn" id="7_u5sy4"]
 [ext_resource type="PackedScene" uid="uid://cqwliglyeho5e" path="res://scenes/enemy.tscn" id="8_gee14"]
+[ext_resource type="FontFile" uid="uid://c14812ee1qjnt" path="res://fonts/born2bsporty-fs.regular.otf" id="10_kvpfn"]
 [ext_resource type="PackedScene" uid="uid://c7b7w3fm7657x" path="res://scenes/collectible_spawner.tscn" id="10_vtaks"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_p57ef"]
@@ -15,6 +16,19 @@ size = Vector2(68, 106)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_u5sy4"]
 size = Vector2(68, 106)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dinhu"]
+bg_color = Color(0.6, 0.6, 0.6, 0.576471)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.0338533, 0.0338533, 0.0338532, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_kvuet"]
+font = ExtResource("10_kvpfn")
+font_size = 40
+font_color = Color(0.176419, 0.176419, 0.176419, 1)
 
 [node name="game" type="Node2D"]
 script = ExtResource("1_iywne")
@@ -138,6 +152,7 @@ player_path = NodePath("../player")
 
 [node name="collectible_spawner" parent="." instance=ExtResource("10_vtaks")]
 z_index = 100
+spawn_interval = 3.0
 
 [node name="Marker2D" type="Marker2D" parent="collectible_spawner"]
 position = Vector2(370, 78)
@@ -173,49 +188,49 @@ position = Vector2(446, 342)
 position = Vector2(446, 385)
 
 [node name="Marker2D12" type="Marker2D" parent="collectible_spawner"]
-position = Vector2(490, 300)
+position = Vector2(520, 310)
 
 [node name="Marker2D13" type="Marker2D" parent="collectible_spawner"]
-position = Vector2(490, 342)
+position = Vector2(520, 352)
 
 [node name="Marker2D14" type="Marker2D" parent="collectible_spawner"]
-position = Vector2(490, 385)
+position = Vector2(520, 395)
 
 [node name="Marker2D15" type="Marker2D" parent="collectible_spawner"]
-position = Vector2(529, 255)
+position = Vector2(559, 265)
 
 [node name="Marker2D16" type="Marker2D" parent="collectible_spawner"]
-position = Vector2(529, 297)
+position = Vector2(559, 307)
 
 [node name="Marker2D17" type="Marker2D" parent="collectible_spawner"]
-position = Vector2(529, 340)
+position = Vector2(559, 350)
 
 [node name="Marker2D18" type="Marker2D" parent="collectible_spawner"]
-position = Vector2(573, 255)
+position = Vector2(603, 265)
 
 [node name="Marker2D19" type="Marker2D" parent="collectible_spawner"]
-position = Vector2(573, 297)
+position = Vector2(603, 307)
 
 [node name="Marker2D20" type="Marker2D" parent="collectible_spawner"]
-position = Vector2(573, 340)
+position = Vector2(603, 350)
 
 [node name="Marker2D21" type="Marker2D" parent="collectible_spawner"]
-position = Vector2(529, 389)
+position = Vector2(559, 399)
 
 [node name="Marker2D22" type="Marker2D" parent="collectible_spawner"]
-position = Vector2(529, 431)
+position = Vector2(559, 441)
 
 [node name="Marker2D23" type="Marker2D" parent="collectible_spawner"]
-position = Vector2(529, 474)
+position = Vector2(559, 484)
 
 [node name="Marker2D24" type="Marker2D" parent="collectible_spawner"]
-position = Vector2(573, 389)
+position = Vector2(603, 399)
 
 [node name="Marker2D25" type="Marker2D" parent="collectible_spawner"]
-position = Vector2(573, 431)
+position = Vector2(603, 441)
 
 [node name="Marker2D26" type="Marker2D" parent="collectible_spawner"]
-position = Vector2(573, 474)
+position = Vector2(603, 484)
 
 [node name="Marker2D27" type="Marker2D" parent="collectible_spawner"]
 position = Vector2(664, 308)
@@ -264,6 +279,18 @@ position = Vector2(819, 338)
 
 [node name="Marker2D38" type="Marker2D" parent="collectible_spawner"]
 position = Vector2(819, 381)
+
+[node name="Level" type="Label" parent="."]
+texture_filter = 1
+offset_left = 984.0
+offset_top = 69.0
+offset_right = 1122.0
+offset_bottom = 125.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_dinhu")
+text = "LEVEL 1"
+label_settings = SubResource("LabelSettings_kvuet")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="finished" from="music_game" to="." method="_on_music_game_finished"]
 

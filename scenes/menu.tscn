@@ -11,18 +11,36 @@ default_font_size = 25
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yqeox"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4ytvr"]
 bg_color = Color(0.866667, 0.482353, 0.313726, 0.52549)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vjb58"]
 bg_color = Color(0.866667, 0.482353, 0.313726, 0.52549)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_con2f"]
-bg_color = Color(0.311232, 0.182983, 0.00726745, 0.560784)
+bg_color = Color(0.536728, 0.218318, 0.17812, 0.560784)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mhnvy"]
 bg_color = Color(0.360784, 0.211765, 0.0980392, 0.643137)
+shadow_color = Color(0.147672, 0.147672, 0.147672, 0.6)
+shadow_size = 2
 
 [sub_resource type="LabelSettings" id="LabelSettings_4ytvr"]
 font = ExtResource("1_yqeox")
@@ -69,6 +87,7 @@ offset_bottom = 180.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = SubResource("Theme_vjb58")
+theme_override_constants/separation = 15
 
 [node name="play" type="Button" parent="VBoxContainer"]
 texture_filter = 1
@@ -133,6 +152,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="verif_container" type="Control" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

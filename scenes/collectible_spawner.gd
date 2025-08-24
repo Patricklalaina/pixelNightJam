@@ -208,10 +208,10 @@ func _collect_markers() -> void:
 
 	if _markers.is_empty():
 		print_verbose("CollectibleSpawner: aucun Marker2D trouvé après collecte.")
-	else:
-		print("CollectibleSpawner: ", _markers.size(), " Marker2D trouvés:")
-		for m in _markers:
-			print(" - ", m.get_path())
+	#else:
+		#print("CollectibleSpawner: ", _markers.size(), " Marker2D trouvés:")
+		#for m in _markers:
+			#print(" - ", m.get_path())
 
 func _gather_markers_recursive(root: Node, out: Array[Marker2D]) -> void:
 	for child in root.get_children():
