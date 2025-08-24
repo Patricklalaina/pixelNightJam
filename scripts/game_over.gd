@@ -3,6 +3,23 @@ extends Control
 func _ready() -> void:
 	await get_tree().process_frame
 
+	# Affiche "Timeout" si la fin de jeu vient du timer
+	if GameManager.last_end_by_timeout:
+		var title_label := get_node_or_null("ColorRect/VBoxContainer/Title") as Label
+		if title_label:
+			title_label.text = "Timeout"
+		else:
+			# Crée un titre en tête si la scène n'en expose pas
+			var root_box := get_node_or_null("ColorRect/VBoxContainer") as VBoxContainer
+			if root_box:
+				var lbl := Label.new()
+				lbl.name = "Title"
+				lbl.text = "Timeout"
+				lbl.add_theme_font_size_override("font_size", 36)
+				lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+				root_box.add_child(lbl)
+				root_box.move_child(lbl, 0)
+
 	# Focus "Rejouer" si présent
 	var retry_btn := get_node_or_null("ColorRect/VBoxContainer/Buttons/Retry") as Button
 	if retry_btn:
